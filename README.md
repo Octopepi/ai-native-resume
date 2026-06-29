@@ -435,12 +435,6 @@ candidate-materials/
 
 这个模式值得借鉴，但不应强制使用。一次性简历定制直接基于 `resume-data.js` 就够了；只有当用户反复投递多个岗位、素材很多、需要长期版本管理时，再建立素材库。
 
-是否改名：
-
-短期不建议改名。`ai-native-resume` 已经覆盖了核心概念：把简历变成 AI 友好的结构化 HTML，并支持后续 AI 修改。JD 定制是这个工作流的自然下一步，适合放在同一个 Skill 里。
-
-如果未来扩展到 ATS 打分、求职信、面试准备、批量岗位版本、投递策略等完整求职系统，再考虑拆出独立的 `resume-jd-tailor` 或 `career-application-copilot`。
-
 ## Built with Verdent
 
 Built with [Verdent](https://www.verdent.ai) — an AI coding agent that handled the full workflow in a single conversation.

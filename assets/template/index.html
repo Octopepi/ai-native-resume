@@ -3,60 +3,94 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="求职甲 - AI产品经理 HTML 简历">
-    <title>求职甲 - AI产品经理</title>
+    <meta name="description" content="陈安然 Joy Chen - 投资者关系（IR）简历">
+    <title>陈安然 Joy Chen - 投资者关系（IR）简历</title>
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
     <div class="resume-shell">
       <aside class="control-panel" aria-label="简历操作">
         <div>
-          <p class="eyebrow">HTML Resume</p>
-          <h1>AI 可读、可改、可投递的简历</h1>
-          <p>这份页面由结构化数据驱动。修改内容时优先编辑 <code>resume-data.js</code>，样式修改编辑 <code>styles.css</code>。</p>
+          <p class="eyebrow">Career Resume</p>
+          <h1>面向社招投递的结构化简历模板</h1>
+          <p>内容由 <code>resume-data.js</code> 驱动，适合按不同 JD 快速调整定位、经历和关键词。</p>
         </div>
         <div class="actions">
           <label class="upload-control" for="avatar-upload">
             上传头像
             <input id="avatar-upload" type="file" accept="image/png,image/jpeg,image/webp">
           </label>
-          <button type="button" data-action="clear-avatar">恢复头像占位</button>
+          <button type="button" data-action="clear-avatar">恢复头像</button>
           <button type="button" data-action="print">打印 / 导出 PDF</button>
           <button type="button" data-action="copy-markdown">复制 Markdown</button>
           <button type="button" data-action="copy-json">复制 JSON</button>
         </div>
       </aside>
 
-      <main class="resume-page" id="resume" aria-label="求职甲简历">
-        <section class="hero">
-          <div>
-            <p class="resume-type">Personal Resume</p>
+      <main class="resume-page" id="resume" aria-label="候选人简历">
+        <header class="hero">
+          <div class="hero-copy">
+            <p class="resume-type">Experienced Hire Resume</p>
             <h2 id="candidate-name"></h2>
             <p class="target" id="candidate-target"></p>
             <p class="summary" id="candidate-summary"></p>
           </div>
-          <div class="portrait" aria-label="头像占位">
-            <img id="candidate-avatar" alt="求职甲头像" hidden>
-            <span id="avatar-fallback">甲</span>
+          <div class="portrait" aria-label="头像">
+            <img id="candidate-avatar" alt="候选人头像" hidden>
+            <span id="avatar-fallback"></span>
           </div>
+        </header>
+
+        <section class="contact-strip" id="contact-info" aria-label="联系方式"></section>
+
+        <section class="resume-section compact" aria-labelledby="positioning-title">
+          <div class="section-title">
+            <h3 id="positioning-title">个人定位</h3>
+            <em>Positioning</em>
+          </div>
+          <ul class="positioning-list" data-list="positioning"></ul>
         </section>
 
-        <section class="info-grid" id="personal-info" aria-label="个人信息"></section>
-
-        <section class="resume-section" id="internships" aria-labelledby="internships-title">
+        <section class="resume-section compact" aria-labelledby="highlights-title">
           <div class="section-title">
-            <span></span>
-            <h3 id="internships-title">实习经历 <em>Internship experience</em></h3>
+            <h3 id="highlights-title">核心优势</h3>
+            <em>Highlights</em>
           </div>
-          <div class="timeline" data-list="internships"></div>
+          <div class="highlight-grid" data-list="highlights"></div>
         </section>
 
-        <section class="resume-section" id="other-experience" aria-labelledby="other-title">
+        <section class="resume-section" aria-labelledby="experience-title">
           <div class="section-title">
-            <span></span>
-            <h3 id="other-title">其他经历 <em>Other experience</em></h3>
+            <h3 id="experience-title">工作经历</h3>
+            <em>Experience</em>
           </div>
-          <div class="cards" data-list="otherExperience"></div>
+          <div class="timeline" data-list="experience"></div>
+        </section>
+
+        <div class="two-column">
+          <section class="resume-section" aria-labelledby="projects-title">
+            <div class="section-title">
+              <h3 id="projects-title">项目与研究</h3>
+              <em>Projects</em>
+            </div>
+            <div class="stacked-list" data-list="projects"></div>
+          </section>
+
+          <section class="resume-section" aria-labelledby="education-title">
+            <div class="section-title">
+              <h3 id="education-title">教育背景</h3>
+              <em>Education</em>
+            </div>
+            <div class="stacked-list" data-list="education"></div>
+          </section>
+        </div>
+
+        <section class="resume-section" aria-labelledby="skills-title">
+          <div class="section-title">
+            <h3 id="skills-title">证书与技能</h3>
+            <em>Credentials & Skills</em>
+          </div>
+          <div class="skill-board" id="skill-board"></div>
         </section>
       </main>
     </div>

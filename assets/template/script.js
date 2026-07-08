@@ -1,7 +1,7 @@
 const data = window.resumeData;
 const avatarStorageKey = "html-resume-avatar";
 
-const text = (value) => document.createTextNode(value);
+const text = (value) => document.createTextNode(value || "");
 
 function createElement(tag, className, content) {
   const element = document.createElement(tag);
@@ -10,24 +10,32 @@ function createElement(tag, className, content) {
   return element;
 }
 
+function initials(name) {
+  return (name || "")
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((part) => part[0])
+    .slice(0, 2)
+    .join("");
+}
+
 function renderBasics() {
+  document.title = `${data.basics.name} - ${data.basics.title}`;
   document.getElementById("candidate-name").textContent = data.basics.name;
   document.getElementById("candidate-target").textContent = data.basics.intent;
   document.getElementById("candidate-summary").textContent = data.basics.summary;
+  document.getElementById("avatar-fallback").textContent = initials(data.basics.name);
 
-  const info = [
-    ["社媒ID", data.basics.socialId],
-    ["本科院校", data.basics.undergraduate],
-    ["硕士院校", data.basics.graduate],
+  const contacts = [
+    ["所在地", data.basics.location],
+    ["手机", data.basics.phone],
     ["邮箱", data.basics.email],
-    ["手机号码", data.basics.phone],
-    ["毕业年份", data.basics.graduationYear],
-    ["关键词", data.highlights.join(" / ")]
+    ["方向", data.basics.title]
   ];
 
-  const container = document.getElementById("personal-info");
-  info.forEach(([label, value]) => {
-    const item = createElement("article", "info-item");
+  const container = document.getElementById("contact-info");
+  contacts.forEach(([label, value]) => {
+    const item = createElement("article", "contact-item");
     item.append(createElement("strong", "", label));
     item.append(createElement("span", "", value));
     container.append(item);
@@ -54,27 +62,43 @@ function renderAvatar() {
   setAvatar(localStorage.getItem(avatarStorageKey) || data.basics.avatar);
 }
 
-function renderInternships() {
-  const container = document.querySelector('[data-list="internships"]');
+function renderPositioning() {
+  const container = document.querySelector('[data-list="positioning"]');
+  data.positioning.forEach((item) => {
+    container.append(createElement("li", "", item));
+  });
+}
 
-  data.internships.forEach((item) => {
+function renderHighlights() {
+  const container = document.querySelector('[data-list="highlights"]');
+  data.highlights.forEach((item) => {
+    const article = createElement("article", "highlight-card");
+    article.append(createElement("strong", "", item.label));
+    article.append(createElement("span", "", item.value));
+    container.append(article);
+  });
+}
+
+function renderExperience() {
+  const container = document.querySelector('[data-list="experience"]');
+
+  data.experience.forEach((item) => {
     const article = createElement("article", "timeline-item");
     const header = createElement("header", "item-header");
     const titleWrap = createElement("div");
+    const meta = [item.role, item.location].filter(Boolean).join(" · ");
+
     titleWrap.append(createElement("h4", "", item.company));
-    titleWrap.append(createElement("p", "role", item.role));
+    titleWrap.append(createElement("p", "role", meta));
     header.append(titleWrap);
     header.append(createElement("time", "", item.period));
     article.append(header);
     article.append(createElement("p", "item-summary", item.summary));
 
-    if (item.achievements.length) {
+    if (item.achievements?.length) {
       const list = createElement("ul", "achievement-list");
       item.achievements.forEach((achievement) => {
-        const listItem = createElement("li");
-        listItem.append(createElement("strong", "", `${achievement.label}：`));
-        listItem.append(text(achievement.text));
-        list.append(listItem);
+        list.append(createElement("li", "", achievement));
       });
       article.append(list);
     }
@@ -83,21 +107,51 @@ function renderInternships() {
   });
 }
 
-function renderOtherExperience() {
-  const container = document.querySelector('[data-list="otherExperience"]');
+function renderProjects() {
+  const container = document.querySelector('[data-list="projects"]');
 
-  data.otherExperience.forEach((item) => {
-    const article = createElement("article", "experience-card");
-    article.append(createElement("h4", "", item.title));
-    article.append(createElement("p", "", item.text));
-    if (item.link) {
-      const link = createElement("a", "", item.link);
-      link.href = item.link;
-      link.target = "_blank";
-      link.rel = "noreferrer";
-      article.append(link);
-    }
+  data.projects.forEach((item) => {
+    const article = createElement("article", "mini-card");
+    const header = createElement("header", "mini-header");
+    header.append(createElement("h4", "", item.name));
+    header.append(createElement("time", "", item.period));
+    article.append(header);
+    article.append(createElement("p", "", item.description));
     container.append(article);
+  });
+}
+
+function renderEducation() {
+  const container = document.querySelector('[data-list="education"]');
+
+  data.education.forEach((item) => {
+    const article = createElement("article", "mini-card");
+    const header = createElement("header", "mini-header");
+    header.append(createElement("h4", "", item.school));
+    header.append(createElement("time", "", item.period));
+    article.append(header);
+    article.append(createElement("p", "", `${item.degree} · ${item.location}`));
+    article.append(createElement("p", "muted-line", item.honors));
+    container.append(article);
+  });
+}
+
+function renderSkills() {
+  const board = document.getElementById("skill-board");
+  const groups = [
+    ["证书", data.credentials],
+    ["金融/分析", data.skills.finance],
+    ["工具", data.skills.tools],
+    ["语言", data.skills.languages]
+  ];
+
+  groups.forEach(([label, values]) => {
+    const group = createElement("article", "skill-group");
+    group.append(createElement("h4", "", label));
+    const tags = createElement("div", "tag-list");
+    values.forEach((value) => tags.append(createElement("span", "", value)));
+    group.append(tags);
+    board.append(group);
   });
 }
 
@@ -107,31 +161,41 @@ function toMarkdown() {
     "",
     data.basics.intent,
     "",
-    `- 社媒ID：${data.basics.socialId}`,
-    `- 本科院校：${data.basics.undergraduate}`,
-    `- 硕士院校：${data.basics.graduate}`,
-    `- 邮箱：${data.basics.email}`,
-    `- 手机号码：${data.basics.phone}`,
-    `- 毕业年份：${data.basics.graduationYear}`,
+    `所在地：${data.basics.location}`,
+    `手机：${data.basics.phone}`,
+    `邮箱：${data.basics.email}`,
     "",
-    "## 核心关键词",
-    ...data.highlights.map((item) => `- ${item}`),
+    "## 个人定位",
+    data.basics.summary,
     "",
-    "## 实习经历"
+    ...data.positioning.map((item) => `- ${item}`),
+    "",
+    "## 核心优势",
+    ...data.highlights.map((item) => `- **${item.label}：**${item.value}`),
+    "",
+    "## 工作经历"
   ];
 
-  data.internships.forEach((item) => {
-    lines.push("", `### ${item.company} - ${item.role}`, `时间：${item.period}`, "", item.summary);
-    item.achievements.forEach((achievement) => {
-      lines.push(`- **${achievement.label}：**${achievement.text}`);
-    });
+  data.experience.forEach((item) => {
+    lines.push("", `### ${item.company} - ${item.role}`, `${item.location} | ${item.period}`, "", item.summary);
+    item.achievements.forEach((achievement) => lines.push(`- ${achievement}`));
   });
 
-  lines.push("", "## 其他经历");
-  data.otherExperience.forEach((item) => {
-    lines.push("", `### ${item.title}`, item.text);
-    if (item.link) lines.push(item.link);
+  lines.push("", "## 项目与研究");
+  data.projects.forEach((item) => {
+    lines.push("", `### ${item.name}`, `${item.period}`, item.description);
   });
+
+  lines.push("", "## 教育背景");
+  data.education.forEach((item) => {
+    lines.push("", `### ${item.school}`, `${item.degree} | ${item.location} | ${item.period}`, item.honors);
+  });
+
+  lines.push("", "## 证书与技能");
+  lines.push(`- 证书：${data.credentials.join(" / ")}`);
+  lines.push(`- 金融/分析：${data.skills.finance.join(" / ")}`);
+  lines.push(`- 工具：${data.skills.tools.join(" / ")}`);
+  lines.push(`- 语言：${data.skills.languages.join(" / ")}`);
 
   return lines.join("\n");
 }
@@ -157,11 +221,13 @@ function bindActions() {
     });
     reader.readAsDataURL(file);
   });
+
   document.querySelector('[data-action="clear-avatar"]').addEventListener("click", () => {
     localStorage.removeItem(avatarStorageKey);
     document.getElementById("avatar-upload").value = "";
-    setAvatar("");
+    setAvatar(data.basics.avatar);
   });
+
   document.querySelector('[data-action="print"]').addEventListener("click", () => window.print());
   document.querySelector('[data-action="copy-markdown"]').addEventListener("click", (event) => {
     copyToClipboard(toMarkdown(), event.currentTarget);
@@ -173,6 +239,10 @@ function bindActions() {
 
 renderBasics();
 renderAvatar();
-renderInternships();
-renderOtherExperience();
+renderPositioning();
+renderHighlights();
+renderExperience();
+renderProjects();
+renderEducation();
+renderSkills();
 bindActions();

@@ -29,8 +29,7 @@ function renderBasics() {
   const contacts = [
     ["所在地", data.basics.location],
     ["手机", data.basics.phone],
-    ["邮箱", data.basics.email],
-    ["方向", data.basics.title]
+    ["邮箱", data.basics.email]
   ];
 
   const container = document.getElementById("contact-info");
@@ -140,8 +139,10 @@ function renderSkills() {
   const board = document.getElementById("skill-board");
   const groups = [
     ["证书", data.credentials],
-    ["金融/分析", data.skills.finance],
-    ["工具", data.skills.tools],
+    ["产品", data.skills.product],
+    ["AI 工具", data.skills.ai],
+    ["交付协作", data.skills.delivery],
+    ["领域理解", data.skills.domain],
     ["语言", data.skills.languages]
   ];
 
@@ -193,8 +194,10 @@ function toMarkdown() {
 
   lines.push("", "## 证书与技能");
   lines.push(`- 证书：${data.credentials.join(" / ")}`);
-  lines.push(`- 金融/分析：${data.skills.finance.join(" / ")}`);
-  lines.push(`- 工具：${data.skills.tools.join(" / ")}`);
+  lines.push(`- 产品：${data.skills.product.join(" / ")}`);
+  lines.push(`- AI 工具：${data.skills.ai.join(" / ")}`);
+  lines.push(`- 交付协作：${data.skills.delivery.join(" / ")}`);
+  lines.push(`- 领域理解：${data.skills.domain.join(" / ")}`);
   lines.push(`- 语言：${data.skills.languages.join(" / ")}`);
 
   return lines.join("\n");

@@ -9,7 +9,9 @@
   --line-strong: #cfc2b4;
   --accent: #8c5a36;
   --accent-soft: #efe3d6;
+  --accent-wash: #f6eadc;
   --sage: #5e6b5a;
+  --sage-soft: #e7ebe2;
   --shell: #f8f3ea;
   --white: #ffffff;
 }
@@ -70,8 +72,7 @@ body {
   font-size: 0.88em;
 }
 
-.eyebrow,
-.resume-type {
+.eyebrow {
   margin: 0;
   color: var(--accent);
   font-size: 0.68rem;
@@ -119,6 +120,8 @@ button:hover,
 }
 
 .resume-page {
+  position: relative;
+  overflow: hidden;
   width: 210mm;
   min-height: 297mm;
   margin-inline: auto;
@@ -129,12 +132,24 @@ button:hover,
   box-shadow: 0 22px 70px rgba(70, 52, 36, 0.14);
 }
 
+.resume-page::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4mm;
+  background: linear-gradient(180deg, var(--accent), var(--sage));
+}
+
+.resume-page > * {
+  position: relative;
+}
+
 .hero {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 26mm;
-  gap: 7mm;
+  grid-template-columns: minmax(0, 1fr) 25mm;
+  gap: 6mm;
   align-items: start;
-  padding-bottom: 5mm;
+  padding: 1mm 0 4.2mm 3mm;
   border-bottom: 1px solid var(--line-strong);
 }
 
@@ -143,16 +158,21 @@ button:hover,
 }
 
 .hero h2 {
-  margin: 1.2mm 0 0;
+  margin: 0;
   color: var(--ink);
-  font-size: 24pt;
+  font-size: 25pt;
   font-weight: 780;
   line-height: 1.05;
 }
 
 .target {
-  margin: 1.4mm 0 0;
+  display: inline-flex;
+  margin: 1.7mm 0 0;
+  padding: 0.8mm 2mm;
   color: var(--accent);
+  background: var(--accent-wash);
+  border: 1px solid #ead8c4;
+  border-radius: 999px;
   font-size: 9pt;
   font-weight: 720;
 }
@@ -169,12 +189,13 @@ button:hover,
   display: grid;
   place-items: center;
   overflow: hidden;
-  width: 26mm;
+  width: 25mm;
   aspect-ratio: 3 / 4;
   color: var(--accent);
   background: var(--shell);
   border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: 12px;
+  box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.34);
 }
 
 .portrait span {
@@ -190,15 +211,16 @@ button:hover,
 
 .contact-strip {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: 0.72fr 0.9fr 1.38fr;
   gap: 1.6mm;
   margin-top: 3mm;
+  padding-left: 3mm;
 }
 
 .contact-item {
   min-width: 0;
   padding: 1.45mm 1.8mm;
-  background: var(--paper-soft);
+  background: rgba(251, 246, 237, 0.72);
   border: 1px solid var(--line);
   border-radius: 7px;
 }
@@ -230,6 +252,7 @@ button:hover,
   display: flex;
   align-items: baseline;
   gap: 2mm;
+  padding-left: 3mm;
   padding-bottom: 1.15mm;
   border-bottom: 1px solid var(--line);
 }
@@ -255,7 +278,7 @@ button:hover,
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1.2mm 3mm;
   margin: 2mm 0 0;
-  padding: 0;
+  padding: 0 0 0 3mm;
   list-style: none;
 }
 
@@ -283,14 +306,15 @@ button:hover,
   grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 1.6mm;
   margin-top: 2mm;
+  padding-left: 3mm;
 }
 
 .highlight-card {
   min-width: 0;
   padding: 1.7mm;
-  background: var(--paper-soft);
+  background: linear-gradient(180deg, var(--white), var(--paper-soft));
   border: 1px solid var(--line);
-  border-radius: 7px;
+  border-radius: 9px;
 }
 
 .highlight-card strong {
@@ -312,11 +336,26 @@ button:hover,
   display: grid;
   gap: 3.2mm;
   margin-top: 2.4mm;
+  padding-left: 3mm;
 }
 
 .timeline-item {
-  padding: 0 0 3mm;
+  position: relative;
+  padding: 0 0 3mm 3mm;
   border-bottom: 1px solid var(--line);
+  border-left: 1px solid var(--line);
+}
+
+.timeline-item::before {
+  content: "";
+  position: absolute;
+  top: 0.9mm;
+  left: -0.9mm;
+  width: 1.8mm;
+  height: 1.8mm;
+  background: var(--paper);
+  border: 1px solid var(--accent);
+  border-radius: 999px;
 }
 
 .timeline-item:last-child {
@@ -380,6 +419,7 @@ time {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 5mm;
+  padding-left: 3mm;
 }
 
 .stacked-list {
@@ -390,9 +430,9 @@ time {
 
 .mini-card {
   padding: 1.9mm 2.2mm;
-  background: var(--paper-soft);
+  background: rgba(251, 246, 237, 0.78);
   border: 1px solid var(--line);
-  border-radius: 7px;
+  border-radius: 9px;
 }
 
 .mini-card p {
@@ -408,17 +448,18 @@ time {
 
 .skill-board {
   display: grid;
-  grid-template-columns: 0.8fr 1fr 1fr 1fr;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1.6mm;
   margin-top: 2mm;
+  padding-left: 3mm;
 }
 
 .skill-group {
   min-width: 0;
   padding: 1.8mm 2mm;
-  background: var(--paper-soft);
+  background: rgba(251, 246, 237, 0.78);
   border: 1px solid var(--line);
-  border-radius: 7px;
+  border-radius: 9px;
 }
 
 .skill-group h4 {
